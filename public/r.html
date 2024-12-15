@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Synced Text</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <script type="module" src="js/master.js"></script>
+    <script src="https://download.agora.io/sdk/release/AgoraRTC_N.js"></script>
+  </head>
+  <body>
+    <div id="loading-overlay" style="display: none">
+      <div class="loading-spinner"></div>
+      <div class="loading-text">Loading AI Model...</div>
+    </div>
+    <textarea id="text-area" placeholder="Type here..."></textarea>
+    <audio controls id="aud"></audio>
+    <script src="js/websocket.js"></script>
+    <!-- <script type="module" src="js/audioRecorder.js"></script> -->
+  </body>
+</html>

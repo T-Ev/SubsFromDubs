@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Room</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <!-- <script type="module" src="https://cdn.jsdelivr.net/npm/@huggingface/transformers"></script> -->
+  </head>
+  <body>
+    <button id="create-room">Create Room</button>
+
+    <h1>Whisper Tiny Speech-to-Text</h1>
+    <button id="start">Start Recording</button>
+    <button id="stop" disabled>Stop Recording</button>
+    <p id="transcription">Transcription will appear here...</p>
+    <audio controls id="aud"></audio>
+
+    <script type="module" src="utils/extra.js"></script>
+
+    <script src="js/createRoom.js"></script>
+  </body>
+</html>
