@@ -1,44 +1,34 @@
 import express, { Router } from "express";
-import http from "http";
-// import { WebSocketServer } from "ws";
-import { pipeline } from "@xenova/transformers";
-import path from "path";
-import { fileURLToPath } from "url";
-// import agoraService from "./server/agora.js";
-import bodyParser from "body-parser";
 import serverless from "serverless-http";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
 const app = express();
-app.use(bodyParser.json());
-const server = http.createServer(app);
+// app.use(bodyParser.json());
+// const server = http.createServer(app);
 // const wss = new WebSocketServer({ server });
 
 const rooms = {};
 
 // Serve static files (e.g., HTML, CSS, JS)
-app.use(express.static("public"));
+// app.use(express.static("public"));
 // Serve static files with correct MIME type
 
 // Serve different HTML based on room query
-app.get("/", (req, res) => {
-  const roomId = req.query.room;
-  if (!roomId) {
-    res.sendFile(path.join(__dirname, "public", "index.html"));
-  } else {
-    res.redirect("/r");
-  }
-});
-app.get("/r", (req, res) => {
-  const roomId = req.query.room;
-  if (roomId) {
-    res.sendFile(path.join(__dirname, "public", "ru.html"));
-  } else {
-    res.redirect("/");
-  }
-});
+// app.get("/", (req, res) => {
+//   const roomId = req.query.room;
+//   if (!roomId) {
+//     res.sendFile(path.join(__dirname, "public", "index.html"));
+//   } else {
+//     res.redirect("/r");
+//   }
+// });
+// app.get("/r", (req, res) => {
+//   const roomId = req.query.room;
+//   if (roomId) {
+//     res.sendFile(path.join(__dirname, "public", "ru.html"));
+//   } else {
+//     res.redirect("/");
+//   }
+// });
 let sse_clients = [];
 const sendAll = (message, room) => {
   console.log(message, room, sse_clients);
@@ -90,7 +80,8 @@ api.post("/dub", (req, res) => {
 api.get("/echo", (req, res) => {
   res.send("echo");
 });
-app.use("/api", api);
+app.use("/.netlify/functions/index/", api);
+app.use("/api/", api);
 
 //netlify
 export const handler = serverless(app);

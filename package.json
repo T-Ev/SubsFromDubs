@@ -2,18 +2,13 @@
   "name": "subsfromdubs",
   "version": "1.0.0",
   "description": "A Node.js Express app for real-time text synchronization across browsers.",
-  "main": "index.js",
-  "type": "module",
   "scripts": {
-    "start": "node netlify/functions/index.js"
+    "start": "npx netlify-lambda serve src",
+    "build": "npx netlify-lambda build src"
   },
   "dependencies": {
-    "express": "^4.18.2",
-    "ws": "^8.12.0",
-    "@xenova/transformers": "^2.15.0",
-    "@google-cloud/translate": "^8.0.2",
-    "web-audio-api": "*",
     "body-parser": "^1.20.2",
+    "express": "^4.18.2",
     "serverless-http": "*"
   },
   "license": "Apache-2.0",

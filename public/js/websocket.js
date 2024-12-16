@@ -4,7 +4,7 @@ async function init() {
   roomId = new URLSearchParams(window.location.search).get("room");
   master = new URLSearchParams(window.location.search).get("master");
 
-  eventSource = new EventSource(`https://${window.location.host}/events?room=${roomId}`);
+  eventSource = new EventSource(`https://${window.location.host}/api/events?room=${roomId}`);
   console.log("started");
   //   ws = new WebSocket(`wss://${window.location.host}/?room=${roomId}`);
 
