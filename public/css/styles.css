@@ -66,6 +66,12 @@ body {
 .master-start.active {
   background-color: var(--highlight);
 }
+.mobile .master-start {
+  position: absolute;
+  bottom: -40px;
+  left: 10px;
+  z-index: 1;
+}
 /* Boxes */
 .trans-wrapper {
   position: absolute;
