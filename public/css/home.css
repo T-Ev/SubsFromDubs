@@ -1,0 +1,45 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container {
+  text-align: center;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: 65vw;
+  min-width: 600px;
+}
+
+.logo {
+  width: 150px; /* Adjust size as needed */
+}
+
+.tagline {
+  font-size: 1.2em;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.create-room-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.create-room-button:hover {
+  background-color: #0056b3;
+}

@@ -1,0 +1,23 @@
+{
+  "name": "subsfromdubs",
+  "version": "1.0.0",
+  "description": "A Node.js Express app for real-time text synchronization across browsers.",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "ws": "^8.12.0",
+    "@xenova/transformers": "^2.15.0",
+    "@google-cloud/translate": "^8.0.2",
+    "web-audio-api": "*",
+    "body-parser": "^1.20.2"
+  },
+  "license": "Apache-2.0",
+  "author": "Your Name",
+  "engines": {
+    "node": ">=14.x"
+  }
+}
