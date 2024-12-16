@@ -3,8 +3,9 @@
   functions = "netlify/functions"
 [functions]
   external_node_modules = ["express"]
+  node_bundler = "esbuild"
 [[redirects]]
   force = true
   status = 200
-  from = "/*"
-  to = "/.netlify/functions/index/:splat"
+  from = "/"
+  to = "/.netlify/functions/index"

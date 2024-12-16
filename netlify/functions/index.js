@@ -44,8 +44,8 @@ const sendAll = (message, room) => {
   console.log(message, room, sse_clients);
   sse_clients[room].forEach((client) => client.c.write("data: " + JSON.stringify(message) + "\n\n"));
 };
-
-app.get("/events", (req, res) => {
+const api = Router();
+api.get("/events", (req, res) => {
   const urlParams = new URLSearchParams(req.url.split("?")[1]);
   const room = urlParams.get("room");
   res.setHeader("Content-Type", "text/event-stream");
@@ -70,7 +70,7 @@ app.get("/events", (req, res) => {
   });
 });
 
-app.post("/dub", (req, res) => {
+api.post("/dub", (req, res) => {
   const urlParams = new URLSearchParams(req.url.split("?")[1]);
   const roomId = urlParams.get("room");
   console.log("DUBS");
@@ -87,6 +87,7 @@ app.post("/dub", (req, res) => {
     res.send("error");
   }
 });
+app.use("/.netlify/functions/ ", api);
 
 //netlify
 export const handler = serverless(app);
