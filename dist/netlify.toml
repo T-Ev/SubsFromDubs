@@ -9,3 +9,8 @@
   status = 200
   from = "/"
   to = "/.netlify/functions/index"
+[[redirects]]
+  force = true
+  from = "/api/*"
+  status = 200
+  to = "/.netlify/functions/api/:splat"

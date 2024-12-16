@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Router } from "express";
 import http from "http";
 // import { WebSocketServer } from "ws";
 import { pipeline } from "@xenova/transformers";
@@ -46,8 +46,8 @@ const sendAll = (message, room) => {
 };
 const api = Router();
 api.get("/events", (req, res) => {
-  const urlParams = new URLSearchParams(req.url.split("?")[1]);
-  const room = urlParams.get("room");
+  const room = req.query.room;
+
   res.setHeader("Content-Type", "text/event-stream");
   res.setHeader("Cache-Control", "no-cache");
   res.setHeader("Connection", "keep-alive");
@@ -65,7 +65,7 @@ api.get("/events", (req, res) => {
 
   // Handle client disconnect
   req.on("close", () => {
-    sse_clients[room] = sse_clients.filter((client) => client.id !== clientId);
+    sse_clients[room] = sse_clients[room].filter((client) => client.id !== clientId);
     res.end();
   });
 });
@@ -78,7 +78,7 @@ api.post("/dub", (req, res) => {
     const messageData = req.body;
     if (messageData.type === "text") {
       // Handle text messages
-      sendAll(messageStr, roomId);
+      sendAll(messageData, roomId);
     }
     res.send("complete");
   } catch (error) {
@@ -87,7 +87,10 @@ api.post("/dub", (req, res) => {
     res.send("error");
   }
 });
-app.use("/.netlify/functions/ ", api);
+api.get("/echo", (req, res) => {
+  res.send("echo");
+});
+app.use("/api", api);
 
 //netlify
 export const handler = serverless(app);
@@ -134,10 +137,8 @@ export const handler = serverless(app);
 //   });
 // });
 
-// module.exports = { app };
-
 // Start the server
-// const PORT = process.env.PORT || 3000;
-// server.listen(PORT, () => {
-//   console.log(`Server is listening on port ${PORT}`);
-// });
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+  console.log(`Server is listening on port ${PORT}`);
+});
