@@ -13,7 +13,8 @@
     "@xenova/transformers": "^2.15.0",
     "@google-cloud/translate": "^8.0.2",
     "web-audio-api": "*",
-    "body-parser": "^1.20.2"
+    "body-parser": "^1.20.2",
+    "serverless-http": "*"
   },
   "license": "Apache-2.0",
   "author": "Your Name",
