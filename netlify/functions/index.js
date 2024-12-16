@@ -34,7 +34,7 @@ app.get("/", (req, res) => {
 app.get("/r", (req, res) => {
   const roomId = req.query.room;
   if (roomId) {
-    res.sendFile(path.join(__dirname, "public", "r.html"));
+    res.sendFile(path.join(__dirname, "public", "ru.html"));
   } else {
     res.redirect("/");
   }
@@ -138,7 +138,7 @@ export const handler = serverless(app);
 // });
 
 // Start the server
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
-  console.log(`Server is listening on port ${PORT}`);
-});
+// const PORT = process.env.PORT || 3000;
+// server.listen(PORT, () => {
+//   console.log(`Server is listening on port ${PORT}`);
+// });
