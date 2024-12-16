@@ -1,6 +1,6 @@
 import express from "express";
 import http from "http";
-import { WebSocketServer } from "ws";
+// import { WebSocketServer } from "ws";
 import { pipeline } from "@xenova/transformers";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -13,7 +13,7 @@ const __dirname = path.dirname(__filename);
 const app = express();
 app.use(bodyParser.json());
 const server = http.createServer(app);
-const wss = new WebSocketServer({ server });
+// const wss = new WebSocketServer({ server });
 
 const rooms = {};
 
@@ -38,51 +38,99 @@ app.get("/r", (req, res) => {
     res.redirect("/");
   }
 });
+let sse_clients = [];
+const sendAll = (message, room) => {
+  console.log(message, room, sse_clients);
+  sse_clients[room].forEach((client) => client.c.write("data: " + JSON.stringify(message) + "\n\n"));
+};
 
-// WebSocket connection
-wss.on("connection", (ws, req) => {
+app.get("/events", (req, res) => {
   const urlParams = new URLSearchParams(req.url.split("?")[1]);
-  const roomId = urlParams.get("room");
+  const room = urlParams.get("room");
+  res.setHeader("Content-Type", "text/event-stream");
+  res.setHeader("Cache-Control", "no-cache");
+  res.setHeader("Connection", "keep-alive");
 
-  if (!rooms[roomId]) {
-    rooms[roomId] = [];
-  }
-  rooms[roomId].push(ws);
+  const clientId = Date.now();
+  const newClient = {
+    id: clientId,
+    c: res,
+  };
+  if (!sse_clients[room]) sse_clients[room] = [];
+  sse_clients[room].push(newClient);
+  console.log("EVENT", room);
+  // Send an initial event
+  res.write(`data: {"type":"initial", "data": "Connection established", id:${clientId}}\n\n`);
 
-  ws.on("message", async (message) => {
-    try {
-      const messageStr = message.toString();
-      console.log(messageStr);
-      const messageData = JSON.parse(messageStr);
-      if (messageData.type === "text") {
-        // Handle text messages
-        rooms[roomId].forEach((client) => {
-          if (client.readyState === WebSocket.OPEN) {
-            //client !== ws &&
-            client.send(messageStr);
-          }
-        });
-      }
-    } catch (error) {
-      console.error("Message processing error:", error);
-      // Handle plain text messages as fallback
-      rooms[roomId].forEach((client) => {
-        if (client !== ws && client.readyState === WebSocket.OPEN) {
-          client.send(message.toString());
-        }
-      });
-    }
-  });
-
-  ws.on("close", () => {
-    rooms[roomId] = rooms[roomId].filter((client) => client !== ws);
+  // Handle client disconnect
+  req.on("close", () => {
+    sse_clients[room] = sse_clients.filter((client) => client.id !== clientId);
+    res.end();
   });
 });
+
+app.post("/dub", (req, res) => {
+  const urlParams = new URLSearchParams(req.url.split("?")[1]);
+  const roomId = urlParams.get("room");
+  console.log("DUBS");
+  try {
+    const messageData = req.body;
+    if (messageData.type === "text") {
+      // Handle text messages
+      sendAll(messageStr, roomId);
+    }
+    res.send("complete");
+  } catch (error) {
+    console.error("Message processing error:", error);
+    console.log(sse_clients);
+    res.send("error");
+  }
+});
+
+// // WebSocket connection
+// wss.on("connection", (ws, req) => {
+//   const urlParams = new URLSearchParams(req.url.split("?")[1]);
+//   const roomId = urlParams.get("room");
+
+//   if (!rooms[roomId]) {
+//     rooms[roomId] = [];
+//   }
+//   rooms[roomId].push(ws);
+
+//   ws.on("message", async (message) => {
+//     try {
+//       const messageStr = message.toString();
+//       console.log(messageStr);
+//       const messageData = JSON.parse(messageStr);
+//       if (messageData.type === "text") {
+//         // Handle text messages
+//         rooms[roomId].forEach((client) => {
+//           if (client.readyState === WebSocket.OPEN) {
+//             //client !== ws &&
+//             client.send(messageStr);
+//           }
+//         });
+//       }
+//     } catch (error) {
+//       console.error("Message processing error:", error);
+//       // Handle plain text messages as fallback
+//       rooms[roomId].forEach((client) => {
+//         if (client !== ws && client.readyState === WebSocket.OPEN) {
+//           client.send(message.toString());
+//         }
+//       });
+//     }
+//   });
+
+//   ws.on("close", () => {
+//     rooms[roomId] = rooms[roomId].filter((client) => client !== ws);
+//   });
+// });
 
 // module.exports = { app };
 
 // Start the server
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
-  console.log(`Server is listening on port ${PORT}`);
-});
+// const PORT = process.env.PORT || 3000;
+// server.listen(PORT, () => {
+//   console.log(`Server is listening on port ${PORT}`);
+// });

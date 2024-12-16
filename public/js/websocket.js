@@ -1,10 +1,12 @@
-let roomId, ws, master, testy;
+let roomId, ws, master, eventSource;
 
 async function init() {
   roomId = new URLSearchParams(window.location.search).get("room");
   master = new URLSearchParams(window.location.search).get("master");
 
-  ws = new WebSocket(`wss://${window.location.host}/?room=${roomId}`);
+  eventSource = new EventSource(`http://${window.location.host}/events?room=${roomId}`);
+  console.log("started");
+  //   ws = new WebSocket(`wss://${window.location.host}/?room=${roomId}`);
 
   let old = localStorage.getItem("StD_" + roomId);
   if (old) {
@@ -15,9 +17,11 @@ async function init() {
         .scrollTop($(".box-" + key)[0].scrollHeight);
     }
   }
-  ws.onmessage = (event) => {
+  eventSource.onmessage = (event) => {
+    console.log("gotone", event);
     try {
       const message = JSON.parse(event.data);
+      console.log("gotone", event);
       if (message.type === "text") {
         addText($(".box-" + message.lang), message.data);
         let res = localStorage.getItem("StD_" + roomId) || "{}";
@@ -27,13 +31,15 @@ async function init() {
         localStorage.setItem("StD_" + roomId, JSON.stringify(res));
         // $(".box-" + message.lang).html($(".box-" + message.lang).html() + message.data);
         // updateSpans();
+      } else {
+        console.log("unknown one", event.data);
       }
     } catch (error) {
       console.log("Received raw message:", event.data);
     }
   };
 
-  ws.onclose = (event) => {
+  eventSource.onclose = (event) => {
     console.log("WebSocket is closed. Attempting to reconnect...");
     setTimeout(() => {
       init(); // Reinitialize the WebSocket connection
@@ -95,7 +101,7 @@ function addText(obj, txt) {
       .text(word + " ");
 
     // Set animation delay dynamically
-    wordSpan.css("animation-delay", `${index * 0.5}s`);
+    wordSpan.css("animation-delay", `${index * 0.2}s`);
     obj.append(wordSpan);
     obj.scrollTop(obj[0].scrollHeight);
   });

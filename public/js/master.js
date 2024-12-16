@@ -15,6 +15,29 @@ async function testTranslations() {
   let transAudioSp = await transPipelineSp(str);
   console.log(str, transAudio[0].translation_text, transAudioSp[0].translation_text);
 }
+
+async function sendDub(msg) {
+  try {
+    console.log("sending dub");
+    const response = await fetch(`http://${window.location.host}/dub?room=${roomId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: msg,
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.text();
+    console.log("Response data:", data);
+  } catch (error) {
+    console.error("Error sending POST request:", error);
+  }
+}
+
 let prog = false;
 async function transcribeChunk(chunk) {
   if (!prog) {
@@ -40,7 +63,7 @@ async function transcribeChunk(chunk) {
 
     let newText = await transcribeAudio(resampledAudio).then((msg) => {
       if (msg.length > MIN_CHARS) {
-        ws.send(
+        sendDub(
           JSON.stringify({
             type: "text",
             lang: "en",
@@ -56,7 +79,7 @@ async function transcribeChunk(chunk) {
       console.time("translation1");
       await transPipeline(nnText).then((msg) => {
         console.timeEnd("translation1");
-        ws.send(
+        sendDub(
           JSON.stringify({
             type: "text",
             lang: "uk",
@@ -69,7 +92,7 @@ async function transcribeChunk(chunk) {
       console.time("translation2");
       await transPipelineSp(nnText).then((msg) => {
         console.timeEnd("translation2");
-        ws.send(
+        sendDub(
           JSON.stringify({
             type: "text",
             lang: "es",
