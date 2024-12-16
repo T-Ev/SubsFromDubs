@@ -3,19 +3,41 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Synced Text</title>
+    <title>Dubs To Subs</title>
     <link rel="stylesheet" href="css/styles.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script type="module" src="js/master.js"></script>
-    <script src="https://download.agora.io/sdk/release/AgoraRTC_N.js"></script>
+    <script src="js/websocket.js"></script>
   </head>
   <body>
     <div id="loading-overlay" style="display: none">
       <div class="loading-spinner"></div>
       <div class="loading-text">Loading AI Model...</div>
     </div>
-    <textarea id="text-area" placeholder="Type here..."></textarea>
-    <audio controls id="aud"></audio>
-    <script src="js/websocket.js"></script>
-    <!-- <script type="module" src="js/audioRecorder.js"></script> -->
+    <div class="main-logo">
+      <img src="assets/dts_logo.png" title="Dubs To Subs" />
+    </div>
+    <div class="master-wrapper">
+      <div class="master-start">Start Dub</div>
+    </div>
+    <div class="trans-wrapper">
+      <div class="box-en trans-box"></div>
+      <div class="box-es trans-box"></div>
+      <div class="box-uk trans-box"></div>
+    </div>
+    <button id="share-button" class="share-button">Share</button>
+    <div id="share-overlay" class="share-overlay">
+      <div class="share-box">
+        <button class="close-share">&times;</button>
+        <h2>Share Room</h2>
+        <p>Share this link with others to join the room:</p>
+        <div class="share-link-container">
+          <input type="text" id="share-link" readonly />
+          <button id="copy-link">Copy</button>
+        </div>
+        <div id="shareqrcode"></div>
+      </div>
+    </div>
   </body>
 </html>

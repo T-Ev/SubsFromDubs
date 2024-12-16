@@ -64,44 +64,14 @@ wss.on("connection", (ws, req) => {
   ws.on("message", async (message) => {
     try {
       const messageStr = message.toString();
+      console.log(messageStr);
       const messageData = JSON.parse(messageStr);
-
-      if (messageData.type === "audio") {
-        console.log("audio");
-        // try {
-        //   // Convert base64 to Float32Array
-        //   const audioBuffer = Buffer.from(message.data, "base64");
-        //   const float32Array = new Float32Array(new Uint8Array(audioBuffer).buffer);
-
-        //   // Initialize the transcriber
-        //   const transcriber = await pipeline("automatic-speech-recognition", "Xenova/whisper-tiny.en", {
-        //     chunk_length_s: 30,
-        //     stride_length_s: 5,
-        //   });
-
-        //   // Transcribe the audio
-        //   const output = await transcriber(float32Array);
-        //   console.log("Transcription output:", output);
-
-        //   // Send the transcription back to all clients
-        //   rooms[roomId].forEach((client) => {
-        //     if (client.readyState === WebSocket.OPEN) {
-        //       client.send(
-        //         JSON.stringify({
-        //           type: "text",
-        //           data: output.text,
-        //         })
-        //       );
-        //     }
-        //   });
-        // } catch (transcriptionError) {
-        //   console.error("Transcription error:", transcriptionError);
-        // }
-      } else if (messageData.type === "text") {
+      if (messageData.type === "text") {
         // Handle text messages
         rooms[roomId].forEach((client) => {
-          if (client !== ws && client.readyState === WebSocket.OPEN) {
-            client.send(JSON.stringify(messageData));
+          if (client.readyState === WebSocket.OPEN) {
+            //client !== ws &&
+            client.send(messageStr);
           }
         });
       }
