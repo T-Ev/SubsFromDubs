@@ -20,18 +20,6 @@ const rooms = {};
 // Serve static files (e.g., HTML, CSS, JS)
 app.use(express.static("public"));
 // Serve static files with correct MIME type
-// app.use(
-//   express.static(path.join(__dirname, "public"), {
-//     setHeaders: (res, path) => {
-//       if (path.endsWith(".js")) {
-//         res.setHeader("Content-Type", "application/javascript");
-//       }
-//       if (path.endsWith(".ts")) {
-//         res.setHeader("Content-Type", "application/javascript");
-//       }
-//     },
-//   })
-// );
 
 // Serve different HTML based on room query
 app.get("/", (req, res) => {
@@ -92,7 +80,7 @@ wss.on("connection", (ws, req) => {
 });
 
 // Start the server
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
-  console.log(`Server is listening on port ${PORT}`);
-});
+// const PORT = process.env.PORT || 3000;
+// server.listen(PORT, () => {
+//   console.log(`Server is listening on port ${PORT}`);
+// });
