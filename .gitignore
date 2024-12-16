@@ -10,7 +10,6 @@ npm-debug.log*
 .env
 
 # Build output
-dist/
 build/
 
 # OS generated files
