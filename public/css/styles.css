@@ -62,6 +62,8 @@ body {
   font-size: large;
   cursor: pointer;
   display: none;
+  position: relative;
+  z-index: 10;
 }
 .master-start.active {
   background-color: var(--highlight);
