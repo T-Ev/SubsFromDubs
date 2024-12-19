@@ -19,7 +19,7 @@ async function testTranslations() {
 async function sendDub(msg) {
   try {
     console.log("sending dub");
-    const response = await fetch(`https://${window.location.host}/api/dub?room=${roomId}`, {
+    const response = await fetch(`${HTTPS ? "https" : "http"}://${window.location.host}/.netlify/functions/index/dub?room=${roomId}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

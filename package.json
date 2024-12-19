@@ -7,6 +7,7 @@
     "build": "npx netlify-lambda build src"
   },
   "dependencies": {
+    "@netlify/edge-functions": "^2.11.1",
     "body-parser": "^1.20.2",
     "express": "^4.18.2",
     "serverless-http": "*"

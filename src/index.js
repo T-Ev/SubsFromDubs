@@ -63,11 +63,12 @@ api.get("/events", (req, res) => {
 api.post("/dub", (req, res) => {
   const urlParams = new URLSearchParams(req.url.split("?")[1]);
   const roomId = urlParams.get("room");
-  console.log("DUBS");
+  console.log("DUBS", req.body);
   try {
     const messageData = req.body;
     if (messageData.type === "text") {
       // Handle text messages
+      console.log("sending", messageData);
       sendAll(messageData, roomId);
     }
     res.send("complete");
@@ -81,7 +82,7 @@ api.get("/echo", (req, res) => {
   res.send("echo");
 });
 app.use("/.netlify/functions/index/", api);
-app.use("/api/", api);
+// app.use("/api/", api);
 
 //netlify
 export const handler = serverless(app);
