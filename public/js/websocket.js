@@ -4,7 +4,7 @@ async function init() {
   roomId = new URLSearchParams(window.location.search).get("room");
   master = new URLSearchParams(window.location.search).get("master");
 
-  ws = new WebSocket(`ws://${window.location.host}/?room=${roomId}`);
+  ws = new WebSocket(`wss://${window.location.host}/?room=${roomId}`);
 
   let old = localStorage.getItem("StD_" + roomId);
   if (old) {
