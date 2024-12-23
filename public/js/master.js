@@ -93,10 +93,10 @@ async function loadModel() {
     speechPipeline = await pipeline("automatic-speech-recognition", "distil-whisper/distil-medium.en", { device: "webgpu", language: "en", task: "transcribe" }); //"Xenova/whisper-small.en"/"distil-whisper/distil-large-v3"//, chunk_length_s: 30, stride_length_s: 5
   }
   if (!transPipeline) {
-    transPipeline = await pipeline("translation", "Xenova/opus-mt-en-uk", { device: "webgpu" });
+    transPipeline = await pipeline("translation", "Xenova/opus-mt-en-uk", { dtype: "q8" });
   }
   if (!transPipelineSp) {
-    transPipelineSp = await pipeline("translation", "Xenova/opus-mt-en-es", { device: "webgpu" });
+    transPipelineSp = await pipeline("translation", "Xenova/opus-mt-en-es", { dtype: "q8" });
   }
   console.log("finished");
   overlay.style.display = "none";
