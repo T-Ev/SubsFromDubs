@@ -40,7 +40,6 @@ One device acts as the "Master" and does all the heavy lifting audio capture and
 
 # Roadmap
 
-- Add more detailed loading status for AI models
 - Add option to use OpenAI whisper endpoint to reduce client side compute
 - Add mobile detection and automatically prompt for offloading Whisper to API or scale down model
 - Add dynamic language selection + more supported languages
