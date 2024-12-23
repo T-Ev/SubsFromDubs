@@ -8,10 +8,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script type="module" src="js/master.js"></script>
-    <script src="js/websocket.js"></script>
+    <script type="module" src="js/websocket.js"></script>
   </head>
   <body>
-    <div id="loading-overlay" style="display: none">
+    <div id="loading-overlay">
       <div class="loading-spinner"></div>
       <div class="loading-text">Loading AI Model...</div>
     </div>
@@ -19,7 +19,9 @@
       <img src="assets/dts_logo.png" title="Dubs To Subs" />
     </div>
     <div class="master-wrapper">
+      <h2>You are Host of Room <span class="room-number">1234</span></h2>
       <div class="master-start">Start Dub</div>
+      <div class="loading-text-master"></div>
     </div>
     <div class="trans-wrapper">
       <div class="box-en trans-box"></div>

@@ -1,12 +1,19 @@
+import { initMaster } from "./master.js"; // Ensure the import statement is included
+
 let roomId, ws, master, testy;
 
 async function init() {
   roomId = new URLSearchParams(window.location.search).get("room");
   master = new URLSearchParams(window.location.search).get("master");
+  if (master) {
+    localStorage.setItem("StD_master", roomId);
+    const newUrl = window.location.href.split("&")[0];
+    window.location = newUrl;
+  }
+  if (localStorage.getItem("StD_master") === roomId) master = 1;
 
-  ws = new WebSocket(`wss://${window.location.host}/?room=${roomId}`);
-
-  let old = localStorage.getItem("StD_" + roomId);
+  $(".room-number").text(roomId);
+  let old = localStorage.getItem("StDr_" + roomId);
   if (old) {
     const oldData = JSON.parse(old);
     for (const [key, value] of Object.entries(oldData)) {
@@ -15,16 +22,63 @@ async function init() {
         .scrollTop($(".box-" + key)[0].scrollHeight);
     }
   }
+  initWS();
+  initMaster(master, ws);
+  const sanitizedURL = window.location.href.split("?")[0] + (roomId ? `?room=${roomId}` : "");
+  // Set the current URL as the share link
+  $("#share-link").val(sanitizedURL);
+  const qrCode = new QRCode(document.getElementById("shareqrcode"), {
+    text: sanitizedURL,
+    width: 128,
+    height: 128,
+    colorDark: "#000000",
+    colorLight: "#ffffff",
+    correctLevel: QRCode.CorrectLevel.H,
+  });
+
+  $("#share-button").on("click", () => {
+    $("#share-overlay").addClass("active");
+  });
+
+  $(".close-share").on("click", () => {
+    $("#share-overlay").removeClass("active");
+  });
+
+  $("#copy-link").on("click", async () => {
+    try {
+      await navigator.clipboard.writeText($("#share-link").val());
+      $("#copy-link").text("Copied!");
+      setTimeout(() => {
+        $("#copy-link").text("Copy");
+      }, 2000);
+    } catch (err) {
+      console.error("Failed to copy text: ", err);
+    }
+  });
+  $(".main-logo").on("click", function () {
+    window.location = "/";
+  });
+
+  // Close overlay when clicking outside the share box
+  $("#share-overlay").on("click", (e) => {
+    if (e.target === $("#share-overlay")[0]) {
+      $("#share-overlay").removeClass("active");
+    }
+  });
+}
+function initWS() {
+  const isLocal = ["localhost", "127.0.0.1", "::1"].includes(location.hostname);
+  ws = new WebSocket(`${isLocal ? "ws" : "wss"}://${window.location.host}/?room=${roomId}`);
   ws.onmessage = (event) => {
     try {
       const message = JSON.parse(event.data);
       if (message.type === "text") {
         addText($(".box-" + message.lang), message.data);
-        let res = localStorage.getItem("StD_" + roomId) || "{}";
+        let res = localStorage.getItem("StDr_" + roomId) || "{}";
         res = JSON.parse(res);
         if (!res[message.lang]) res[message.lang] = "";
         res[message.lang] = res[message.lang] + " " + message.data;
-        localStorage.setItem("StD_" + roomId, JSON.stringify(res));
+        localStorage.setItem("StDr_" + roomId, JSON.stringify(res));
         // $(".box-" + message.lang).html($(".box-" + message.lang).html() + message.data);
         // updateSpans();
       }
@@ -36,55 +90,9 @@ async function init() {
   ws.onclose = (event) => {
     console.log("WebSocket is closed. Attempting to reconnect...");
     setTimeout(() => {
-      init(); // Reinitialize the WebSocket connection
+      initWS(); // Reinitialize the WebSocket connection
     }, 1000); // Reconnect after 5 seconds
   };
-  const shareButton = document.getElementById("share-button");
-  const shareOverlay = document.getElementById("share-overlay");
-  const closeShare = document.querySelector(".close-share");
-  const shareLink = document.getElementById("share-link");
-  const copyLink = document.getElementById("copy-link");
-  const sanitizedURL = window.location.href.split("?")[0] + (roomId ? `?room=${roomId}` : "");
-  // Set the current URL as the share link
-  shareLink.value = sanitizedURL;
-  const qrCode = new QRCode(document.getElementById("shareqrcode"), {
-    text: sanitizedURL,
-    width: 128,
-    height: 128,
-    colorDark: "#000000",
-    colorLight: "#ffffff",
-    correctLevel: QRCode.CorrectLevel.H,
-  });
-
-  shareButton.addEventListener("click", () => {
-    shareOverlay.classList.add("active");
-  });
-
-  closeShare.addEventListener("click", () => {
-    shareOverlay.classList.remove("active");
-  });
-
-  copyLink.addEventListener("click", async () => {
-    try {
-      await navigator.clipboard.writeText(shareLink.value);
-      copyLink.textContent = "Copied!";
-      setTimeout(() => {
-        copyLink.textContent = "Copy";
-      }, 2000);
-    } catch (err) {
-      console.error("Failed to copy text: ", err);
-    }
-  });
-  $(".main-logo").on("click", function () {
-    window.location = "/";
-  });
-
-  // Close overlay when clicking outside the share box
-  shareOverlay.addEventListener("click", (e) => {
-    if (e.target === shareOverlay) {
-      shareOverlay.classList.remove("active");
-    }
-  });
 }
 function addText(obj, txt) {
   let words = txt.split(" ");
@@ -110,9 +118,9 @@ function checkMobile() {
   }
 }
 
-window.addEventListener("load", () => {
+$(window).on("load", () => {
   init();
   checkMobile(); // Check on load
 });
 
-window.addEventListener("resize", checkMobile); // Check on resize
+$(window).on("resize", checkMobile); // Check on resize

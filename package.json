@@ -5,16 +5,15 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "start": "node server.js"
+    "start": "npm i && node server.js"
   },
   "dependencies": {
     "express": "^4.18.2",
     "ws": "^8.12.0",
-    "web-audio-api": "*",
     "body-parser": "^1.20.2"
   },
   "license": "Apache-2.0",
-  "author": "Your Name",
+  "author": "TJ Evarts",
   "engines": {
     "node": ">=14.x"
   }
